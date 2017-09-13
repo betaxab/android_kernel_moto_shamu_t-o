@@ -493,6 +493,7 @@ static int bluesleep_populate_pinfo(struct platform_device *pdev)
 
 static int bluesleep_probe(struct platform_device *pdev)
 {
+	struct resource *res;
 	int ret;
 
 	bsi = kzalloc(sizeof(struct bluesleep_info), GFP_KERNEL);
@@ -535,7 +536,14 @@ static int bluesleep_probe(struct platform_device *pdev)
 	}
 	clear_bit(BT_EXT_WAKE, &flags);
 
-	bsi->host_wake_irq = gpio_to_irq(bsi->host_wake);
+	res = platform_get_resource_byname(pdev, IORESOURCE_IRQ,
+						"host_wake");
+	if (!res) {
+		BT_ERR("couldn't find host_wake irq");
+		ret = -ENODEV;
+		goto free_bt_host_wake;
+	}
+	bsi->host_wake_irq = res->start;
 	if (bsi->host_wake_irq < 0) {
 		pr_err("couldn't find host_wake irq");
 		ret = -ENODEV;

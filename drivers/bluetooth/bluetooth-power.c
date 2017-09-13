@@ -37,7 +37,7 @@
 
 #define UART_CLOCK_ENABLE 1
 #define UART_CLOCK_DISABLE 0
-#define HS_UART_0 0
+#define HS_UART_0 3
 
 static struct of_device_id bt_power_match_table[] = {
 	{	.compatible = "qca,qca6174" },
@@ -195,7 +195,7 @@ static int bluetooth_power(int on)
 	BT_PWR_DBG("on: %d", on);
 
 	if (on) {
-		msm_hs_set_clock(HS_UART_0,UART_CLOCK_ENABLE); //enable ttyHSO uart clock
+		msm_hs_set_clock(HS_UART_0,UART_CLOCK_ENABLE); //enable ttyHS3 uart clock
 		BT_PWR_DBG("uart power on");
 		if (bt_power_pdata->bt_vdd_io) {
 			rc = bt_configure_vreg(bt_power_pdata->bt_vdd_io);
